@@ -2,7 +2,7 @@ import express from "express";
 import dotenv from "dotenv/config"
 import {ENV} from "./config/env.js"
 import { connectDB } from "./config/db.js";
-import {clerkMiddleware, Client} from "@clerk/express"
+import {clerkMiddleware} from "@clerk/express"
 import { functions, inngest } from "./config/inngest.js";
 import { serve } from "inngest/express";
 const app = express();
