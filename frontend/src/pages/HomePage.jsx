@@ -17,8 +17,10 @@ import {
 } from "stream-chat-react";
 
 
-import { PlusIcon } from "lucide-react";
+import { HashIcon, PlusIcon, UsersIcon } from "lucide-react";
 import CreateChannelModal from "../components/CreateChannelModal";
+import CustomChannelPreview from "../components/CustomChannelPreview";
+import UsersList from "../components/UsersList";
 
 const HomePage = () => {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
@@ -56,28 +58,71 @@ useEffect(() => {
               <div className="team-channel-list__header gap-4"></div>
               <div className="team-channel-list_content">
                 <div className="create-channel-section"></div>
-                <button onClick={() => setIsCreateModalOpen(true)} className="create-channel-btn">
+                <button
+                  onClick={() => setIsCreateModalOpen(true)}
+                  className="create-channel-btn"
+                >
                   <PlusIcon className="size-4" />
                   <span>Create Channel</span>
                 </button>
               </div>
+              <ChannelList
+                filters={{ members: { $in: [chatClient?.user?.id] } }}
+                options={{ state: true, watch: true }}
+                Preview={({ channel }) => (
+                  <CustomChannelPreview
+                    channel={channel}
+                    activeChannel={activeChannel}
+                    setActiveChannel={(channel) =>
+                      setSearchParams({ channel: channel.id })
+                    }
+                  />
+                )}
+                List={({ children, loading, error }) => (
+                  <div className="channel-sections">
+                    <div className="section-header">
+                      <div className="section-title">
+                        <HashIcon className="size-4" />
+                        <span>Channels</span>
+                      </div>
+                    </div>
+                    {loading && (
+                      <div className="loading-message">Loading channels...</div>
+                    )}
+                    {error && (
+                      <div className="error-message">
+                        Error loading channels
+                      </div>
+                    )}
+                    <div className="channels-list">{children}</div>
+
+                    <div className="section-header direct-messages">
+                      <div className="section-title">
+                        <UsersIcon className="size-2" />
+                        <span>Direct Messages</span>
+                      </div>
+                    </div>
+                    <UsersList activeChannel={activeChannel} />
+                  </div>
+                )}
+              />
             </div>
           </div>
 
-
           <div className="chat-main">
             <Channel channel={activeChannel}>
-            <Window>
-              {/* <CustomCHannelHeader/> */}
-              <MessageList />
-            <MessageInput/>
-            </Window>
+              <Window>
+                {/* <CustomCHannelHeader/> */}
+                <MessageList />
+                <MessageInput />
+              </Window>
               <Thread />
-              </Channel>
+            </Channel>
           </div>
         </div>
         {isCreateModalOpen && (
-          <CreateChannelModal isOpen={isCreateModalOpen}
+          <CreateChannelModal
+            isOpen={isCreateModalOpen}
             onClose={() => setIsCreateModalOpen(false)}
           />
         )}
