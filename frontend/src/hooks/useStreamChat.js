@@ -15,20 +15,29 @@ export const usestreamChat = () => {
   const { data: tokenData, isLoading: tokenLoading, error: tokenError } = useQuery({
     queryKey: ["streaToken"],
     queryFn: getStreamToken,
-    enabled:!!user?.id,//this will take the object and convert into boolean value
-  })
+    enabled: !!user?.id,//this will take the object and convert into boolean value
+  });
 
   useEffect(() => {
-    const initChat = async () => {
-      if (!tokenData?.token || !user) return;
+    if (!tokenData?.token || !user || !STREAM_API_KEY) return;
+    const client = StreamChat.getInstance(STREAM_API_KEY);
+    let cancelled = false;
+    const connect = async () => {
       try {
-        const client = StreamChat.getInstance(STREAM_API_KEY);
         await client.connectUser({
           id: user.id,
-          name: user.fullName,
-          image:user.imageUrl
-        })
-        setChatClient(client)
+          name:
+            user.fullName ??
+            user.username ??
+            user.priaryEmailAddress?.emailAddress ??
+            user.id,
+          image: user.imageUrl ?? undefined,
+        },
+          tokenData.token
+        );
+        if (!cancelled) {
+          setChatClient(client);
+        }
       } catch (error) {
         console.log("Error connecting to stream", error);
         Sentry.captureException(error, {
@@ -36,18 +45,19 @@ export const usestreamChat = () => {
           extra: {
             context: "stream_chat_connection",
             userId: user?.id,
-            streamApiKey: STREAM_API_KEY?"present":"missing",
+            streamApiKey: STREAM_API_KEY ? "present" : "missing",
           }
         })
         
       }
     }
-    initChat()
+    connect();
     //cleanup
-    return ()=>{
-      if (chatClient) chatClient.disconnectUser();
-    }
+    return () => {
+      cancelled = true;
+      client.disconnectUser();
+    };
 
-  }, [tokenData, user, chatClient])
+  }, [tokenData?.token, user?.id]);
   return { chatClient, isLoading: tokenLoading, error: tokenError };
-}
+};
