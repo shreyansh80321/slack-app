@@ -11,7 +11,7 @@ const AuthPage = () => {
             <img src="/logo.png" alt="Shrey" className="brand-logo" />
             <span className="brand-name">Shrey</span>
           </div>
-          <h1 className="hero-title">Where Work Happens ✨</h1>
+          <h1 className="hero-title">Where Family Matters ✨</h1>
           <p className="hero-subtitle">
             Connect with your loved ones instantly through,secure,real-time
             messaging. Experience seamless collaboartion with powerful features
