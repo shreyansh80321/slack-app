@@ -6,14 +6,14 @@ import toast from "react-hot-toast"
 const AuthContext = createContext({});
 
 export default function AuthProvider({ children }) {
-    const { genToken } = useAuth()
+    const { getToken } = useAuth()
     
     useEffect(() => {
       
       const interceptor = axiosInstance.interceptors.request.use(
         async (config) => {
           try {
-            const token = await genToken();
+            const token = await getToken();
             if(token) config.headers.Authorization=`Bearer ${token}`
           } catch (error) {
             if (error.message?.includes("auth") || error.message?.includes("token")) {
@@ -34,7 +34,7 @@ export default function AuthProvider({ children }) {
 
       return () => axiosInstance.interceptors.request.eject(interceptor)
         
-    }, [genToken])
+    }, [getToken])
     
   return <AuthContext.Provider value={{}}>{ children}</AuthContext.Provider>
   }

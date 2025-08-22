@@ -8,11 +8,11 @@ import * as Sentry from "@sentry/react";
 
 const STREAM_API_KEY = import.meta.env.VITE_STREAM_API_KEY;
 
-export const usestreamChat = () => {
+export const useStreamChat = () => {
   const { user } = useUser();
-  const { chatClient, setChatClient } = useState(null);
+  const [ chatClient, setChatClient ] = useState(null);
 
-  const { data: tokenData, isLoading: tokenLoading, error: tokenError } = useQuery({
+  const { data: tokenData, isLoading, error} = useQuery({
     queryKey: ["streaToken"],
     queryFn: getStreamToken,
     enabled: !!user?.id,//this will take the object and convert into boolean value
@@ -59,5 +59,5 @@ export const usestreamChat = () => {
     };
 
   }, [tokenData?.token, user?.id]);
-  return { chatClient, isLoading: tokenLoading, error: tokenError };
+  return { chatClient, isLoading, error};
 };
