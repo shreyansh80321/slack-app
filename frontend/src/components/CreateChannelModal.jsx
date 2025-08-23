@@ -51,7 +51,6 @@ const CreateChannelModal = ({ onClose }) => {
         setLoadingUsers(false);
       }
     };
-
     fetchUsers();
   }, [client]);
   useEffect(() => {
