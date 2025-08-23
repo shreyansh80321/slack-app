@@ -4,7 +4,6 @@ function PinnedMessagesModal({ pinnedMessages, onClose }) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
       <div className="bg-white rounded-xl shadow-2xl w-full max-w-lg mx-4">
-        {/* HEADER */}
         <div className="flex items-center justify-between border-b px-6 py-4">
           <h2 className="text-2xl font-semibold">Pinned Messages</h2>
           <button
@@ -14,8 +13,6 @@ function PinnedMessagesModal({ pinnedMessages, onClose }) {
             <XIcon className="w-5 h-5" />
           </button>
         </div>
-
-        {/* MESSAGES LIST */}
         <div className="px-6 py-4 max-h-96 overflow-y-auto">
           {pinnedMessages.map((msg) => (
             <div
