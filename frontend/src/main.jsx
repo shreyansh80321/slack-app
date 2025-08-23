@@ -28,7 +28,7 @@ if (!PUBLISHABLE_KEY) {
   throw new Error("Missing Publishable Key");
 }
 Sentry.init({
-  dsn: "https://238958d9ef47fea17ae792fdc9d799ca@o4509883253325824.ingest.de.sentry.io/4509887222644816",
+  dsn: import.meta.env.VITE_SENTRY_DSN,
   integrations: [
     Sentry.reactRouterV7BrowserTracingIntegration({
       useEffect: React.useEffect,
